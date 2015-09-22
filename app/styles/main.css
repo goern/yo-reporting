@@ -5,58 +5,63 @@
   padding: 0.2em 0;
 }
 
-body {
-  padding: 0;
+#loggedin {
+    display: none;
 }
 
-/* Everything but the jumbotron gets side spacing for mobile first views */
-.header,
-.marketing,
-.footer {
-  padding-left: 15px;
-  padding-right: 15px;
+#output {
+    padding: 4px;
 }
 
-/* Custom page header */
-.header {
-  border-bottom: 1px solid #e5e5e5;
-  margin-bottom: 10px;
+.metadata {
+  font-size: 0.8em;
 }
-/* Make the masthead heading the same height as the navigation */
-.header h3 {
+
+.card-labels { }
+
+.gray { color: #808080; }
+.red { color: #a30000; }
+.yellow { color: #f0ab00; }
+.green { color: #006621; }
+.orange { display: off; }
+.purple { display: off; }
+
+.trello-card {
+  margin-top: 1em;
+  margin-left: 3%;
+  margin-right: 3%;
+  border-radius: 3px;
+  border: 1px solid #cecece;
+  padding: 10px;
+  background-color: #fdfdfd;
+}
+
+.card-name { }
+
+.card-event-date { }
+
+.card-members { }
+
+.card-due {
+  font-weight: bold;
+}
+.card-description {
+  display: none;
+  color: #4c4c4c;
+  font-size: 0.8em;
+}
+.card-description p {
   margin-top: 0;
   margin-bottom: 0;
-  line-height: 40px;
-  padding-bottom: 19px;
 }
 
-/* Custom page footer */
-.footer {
-  padding-top: 19px;
-  color: #777;
-  border-top: 1px solid #e5e5e5;
+.card-commenet {
+  color: #cccccc;
+  font-size: 0.8em;
 }
-
-.container-narrow > hr {
-  margin: 30px 0;
-}
-
-/* Main marketing message and sign up button */
-.jumbotron {
-  text-align: center;
-  border-bottom: 1px solid #e5e5e5;
-}
-.jumbotron .btn {
-  font-size: 21px;
-  padding: 14px 24px;
-}
-
-/* Supporting marketing content */
-.marketing {
-  margin: 40px 0;
-}
-.marketing p + h4 {
-  margin-top: 28px;
+.card-commenet p {
+  margin-top: 0;
+  margin-bottom: 0;
 }
 
 /* Responsive: Portrait tablets and up */
@@ -66,18 +71,12 @@ body {
   }
 
   /* Remove the padding we set earlier */
-  .header,
-  .marketing,
-  .footer {
+  .header {
     padding-left: 0;
     padding-right: 0;
   }
   /* Space out the masthead */
   .header {
     margin-bottom: 30px;
-  }
-  /* Remove the bottom border on the jumbotron for visual effect */
-  .jumbotron {
-    border-bottom: 0;
   }
 }

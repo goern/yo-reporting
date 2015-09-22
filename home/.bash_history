@@ -66,3 +66,55 @@ npm install -v yo bower grunt-cli gulp
 ls -la
 sync
 sudo npm install -g generator-angular
+npm -h
+npm --help
+npm --verbose
+npm --verbose install --global generator-angular
+npm install --global generator-angular
+sudo npm install --global generator-angular
+sudo npm install --global generator-karma
+yo --version
+pwd
+yo angular
+ls -la
+grunt 
+sudo npm install -g karma
+grunt 
+sudo npm install -g jshint
+grunt serve
+grunt 
+grunt  --force
+ls -la
+git st
+grunt test
+grunt test --force
+sync
+grunt serve
+bower install
+grunt serve
+grunt build
+bower install patternfly --save
+grunt serve
+grunt build
+bower install
+grunt serve
+grunt serve
+grunt ngdocs
+grunt serve
+grunt serve
+grunt serve
+grunt serve
+bower install showdown
+grunt serve
+bower install 
+bower install 
+grunt serve
+grunt build
+grunt clean
+grunt serve
+grunt build
+grunt build
+grunt build
+grunt clean
+grunt build
+grunt build --force

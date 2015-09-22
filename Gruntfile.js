@@ -33,6 +33,10 @@ module.exports = function (grunt) {
 
     // Watches files for changes and runs tasks based on the changed files
     watch: {
+            copy: {
+        files: 'bower_components/**/*',
+        tasks: ['copy']
+      },
       bower: {
         files: ['bower.json'],
         tasks: ['wiredep']
@@ -192,14 +196,14 @@ module.exports = function (grunt) {
         fileTypes:{
           js: {
             block: /(([\s\t]*)\/{2}\s*?bower:\s*?(\S*))(\n|\r|.)*?(\/{2}\s*endbower)/gi,
-              detect: {
-                js: /'(.*\.js)'/gi
-              },
-              replace: {
-                js: '\'{{filePath}}\','
-              }
+            detect: {
+              js: /'(.*\.js)'/gi
+            },
+            replace: {
+              js: '\'{{filePath}}\','
             }
           }
+        }
       }
     },
 
@@ -369,96 +373,102 @@ module.exports = function (grunt) {
           cwd: '.tmp/images',
           dest: '<%= yeoman.dist %>/images',
           src: ['generated/*']
-        }, {
-          expand: true,
-          cwd: 'bower_components/bootstrap/dist',
-          src: 'fonts/*',
-          dest: '<%= yeoman.dist %>'
-        }]
-      },
-      styles: {
-        expand: true,
-        cwd: '<%= yeoman.app %>/styles',
-        dest: '.tmp/styles/',
-        src: '{,*/}*.css'
-      }
-    },
-
-    // Run some tasks in parallel to speed up the build process
-    concurrent: {
-      server: [
-        'copy:styles'
-      ],
-      test: [
-        'copy:styles'
-      ],
-      dist: [
-        'copy:styles',
-        'imagemin',
-        'svgmin'
+        },
+        { expand: true, cwd: 'bower_components/bootstrap/dist', src: 'fonts/*', dest: '<%= yeoman.dist %>/fonts/' },
+        { expand: true, cwd: 'bower_components/font-awesome/fonts/', src: ['**'], dest: 'dist/fonts/'},
+        { expand: true, cwd: 'bower_components/bootstrap/css/', src: ['bootstrap.css', 'bootstrap-theme.css'], dest: '<%= yeoman.dist %>/styles/'},
+        { expand: true, cwd: 'bower_components/font-awesome/css/', src: ['fot-awesome.css'], dest: '<%= yeoman.dist %>/styles/'},
+        { expand: true, cwd: 'bower_components/bootstrap-combobox/css/', src: ['**'], dest: '<%= yeoman.dist %>/styles/'},
+        { expand: true, cwd: 'bower_components/bootstrap-datepicker/dist/css/', src: ['bootstrap-datepicker3.css'], dest: '<%= yeoman.dist %>/styles/'},
+        { expand: true, cwd: 'bower_components/bootstrap-select/dist/css', src: ['bootstrap-select.css'], dest: '<%= yeoman.dist %>/styles/'},
+        { expand: true, cwd: 'bower_components/c3/', src: ['c3.css'], dest: '<%= yeoman.dist %>/styles/'},
+        { expand: true, cwd: 'bower_components/patternfly/dist/css', src: ['patternfly-additions.css', 'patternfly.css'], dest: '<%= yeoman.dist %>/styles/'},
+        { expand: true, cwd: 'bower_components/patternfly/dist/fonts', src: ['**'], dest: '<%= yeoman.dist %>/fonts/'},
       ]
     },
-
-    // Test settings
-    karma: {
-      unit: {
-        configFile: 'test/karma.conf.js',
-        singleRun: true
-      }
+    styles: {
+      expand: true,
+      cwd: '<%= yeoman.app %>/styles',
+      dest: '.tmp/styles/',
+      src: '{,*/}*.css'
     }
-  });
+  },
 
+  // Run some tasks in parallel to speed up the build process
+  concurrent: {
+    server: [
+      'copy:styles'
+    ],
+    test: [
+      'copy:styles'
+    ],
+    dist: [
+      'copy:styles',
+      'imagemin',
+      'svgmin'
+    ]
+  },
 
-  grunt.registerTask('serve', 'Compile then start a connect web server', function (target) {
-    if (target === 'dist') {
-      return grunt.task.run(['build', 'connect:dist:keepalive']);
+  // Test settings
+  karma: {
+    unit: {
+      configFile: 'test/karma.conf.js',
+      singleRun: true
     }
+  }
+});
 
-    grunt.task.run([
-      'clean:server',
-      'wiredep',
-      'concurrent:server',
-      'autoprefixer:server',
-      'connect:livereload',
-      'watch'
-    ]);
-  });
 
-  grunt.registerTask('server', 'DEPRECATED TASK. Use the "serve" task instead', function (target) {
-    grunt.log.warn('The `server` task has been deprecated. Use `grunt serve` to start a server.');
-    grunt.task.run(['serve:' + target]);
-  });
+grunt.registerTask('serve', 'Compile then start a connect web server', function (target) {
+  if (target === 'dist') {
+    return grunt.task.run(['build', 'connect:dist:keepalive']);
+  }
 
-  grunt.registerTask('test', [
+  grunt.task.run([
     'clean:server',
     'wiredep',
-    'concurrent:test',
-    'autoprefixer',
-    'connect:test',
-    'karma'
+    'concurrent:server',
+    'autoprefixer:server',
+    'connect:livereload',
+    'watch'
   ]);
+});
 
-  grunt.registerTask('build', [
-    'clean:dist',
-    'wiredep',
-    'useminPrepare',
-    'concurrent:dist',
-    'autoprefixer',
-    'ngtemplates',
-    'concat',
-    'ngAnnotate',
-    'copy:dist',
-    'cdnify',
-    'cssmin',
-    'uglify',
-    'filerev',
-    'usemin',
-    'htmlmin'
-  ]);
+grunt.registerTask('server', 'DEPRECATED TASK. Use the "serve" task instead', function (target) {
+  grunt.log.warn('The `server` task has been deprecated. Use `grunt serve` to start a server.');
+  grunt.task.run(['serve:' + target]);
+});
 
-  grunt.registerTask('default', [
-    'newer:jshint',
-    'test',
-    'build'
-  ]);
+grunt.registerTask('test', [
+  'clean:server',
+  'wiredep',
+  'concurrent:test',
+  'autoprefixer',
+  'connect:test',
+  'karma'
+]);
+
+grunt.registerTask('build', [
+  'clean:dist',
+  'wiredep',
+  'useminPrepare',
+  'concurrent:dist',
+  'autoprefixer',
+  'ngtemplates',
+  'concat',
+  'ngAnnotate',
+  'copy:dist',
+  'cdnify',
+  'cssmin',
+  'uglify',
+  'filerev',
+  'usemin',
+  'htmlmin'
+]);
+
+grunt.registerTask('default', [
+  'newer:jshint',
+  'test',
+  'build'
+]);
 };
