@@ -1,5 +1,5 @@
 <!doctype html>
-<html>
+<html ng-app="projectApp">
   <head>
     <meta charset="utf-8">
     <title>Systems Engineering Reporting</title>
@@ -19,8 +19,8 @@
     <link rel="stylesheet" href="bower_components/datatables-colvis/css/dataTables.colVis.css" />
     <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.css" />
     <link rel="stylesheet" href="bower_components/google-code-prettify/bin/prettify.min.css" />
-    <link rel="stylesheet" href="bower_components/patternfly/dist/css/patternfly-additions.css" />
     <link rel="stylesheet" href="bower_components/patternfly/dist/css/patternfly.css" />
+    <link rel="stylesheet" href="bower_components/patternfly/dist/css/patternfly-additions.css" />
     <link rel="stylesheet" href="bower_components/angular-patternfly/dist/styles/angular-patternfly.css" />
     <!-- endbower -->
     <!-- endbuild -->
@@ -34,33 +34,38 @@ var markdownConverter = new showdown.Converter();
 </script>
 
   </head>
-  <body role="document" ng-app="projectApp">
+  <body>
     <!--[if lte IE 8]>
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
 
     <nav class="navbar navbar-default navbar-pf" role="navigation">
+      <!-- Brand and toggle get grouped for better mobile display -->
       <div class="navbar-header">
-        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse-1">
+        <button type="button" class="navbar-toggle" ng-click="navbarCollapsed = !navbarCollapsed">
           <span class="sr-only">Toggle navigation</span>
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
         </button>
-        <a class="navbar-brand" href="/">
-          <img src="images/-SysEngTeam.png" alt="Systems Design and Engineering" />
+        <a class="navbar-brand" href="#">
+          Systems Design and Engineering
         </a>
       </div>
-      <div class="collapse navbar-collapse navbar-collapse-1 navbar-right">
+
+      <!-- Collect the nav links, forms, and other content for toggling -->
+      <div class="collapse navbar-collapse navbar-right" collapse="navbarCollapsed">
         <ul class="nav navbar-nav navbar-utility">
           <li class="dropdown">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
               <span class="pficon pficon-user"></span>
               Trello <b class="caret"></b>
             </a>
-            <ul class="dropdown-menu">
+            <ul class="dropdown-menu" ng-controller='TrelloCtrl'>
                 <li id=loggedout>
-                  <a id="connectLink" href="#">log in</a>
+                  <div ng-if='!authorized()'>
+                    <a ng-click='authorize()'>Log in</a>
+                  </div>
                 </li>
                 <ui id="loggedin">
                   <li id="fullName"></li>
@@ -71,10 +76,11 @@ var markdownConverter = new showdown.Converter();
           </li>
         </ul>
       </div>
+
     </nav>
 
     <div class="container-fluid">
-      <div ng-view=""></div>
+      <div ng-view></div>
     </div>
 
     <div class="footer">
@@ -109,9 +115,13 @@ var markdownConverter = new showdown.Converter();
     <!-- endbower -->
     <!-- endbuild -->
 
-        <!-- build:js({.tmp,app}) scripts/scripts.js -->
-        <script src="scripts/app.js"></script>
-        <script src="scripts/controllers/main.js"></script>
-        <!-- endbuild -->
+    <!-- build:js({.tmp,app}) scripts/scripts.js -->
+    <script src="scripts/app.js"></script>
+    <script src="scripts/controllers/main.js"></script>
+    <script src="scripts/controllers/trello.js"></script>
+    <!-- endbuild -->
+
+    <script src="https://api.trello.com/1/client.js?key=e5138b5715c50cc6b98b9d52e730c54d"></script>
+
 </body>
 </html>

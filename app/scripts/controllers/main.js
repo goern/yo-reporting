@@ -14,4 +14,6 @@ angular.module('projectApp')
       'AngularJS',
       'Karma'
     ];
+
+    this.message = 'thanks'
   });
