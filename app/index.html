@@ -30,7 +30,7 @@
 
 <script>
 var boardId = "WZ2gjtnR"; // FIXME
-var markdownConverter = new showdown.Converter();
+// var markdownConverter = new showdown.Converter();
 </script>
 
   </head>
@@ -53,39 +53,96 @@ var markdownConverter = new showdown.Converter();
         </a>
       </div>
 
-      <!-- Collect the nav links, forms, and other content for toggling -->
-      <div class="collapse navbar-collapse navbar-right" collapse="navbarCollapsed">
-        <ul class="nav navbar-nav navbar-utility">
-          <li class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-              <span class="pficon pficon-user"></span>
-              Trello <b class="caret"></b>
-            </a>
-            <ul class="dropdown-menu" ng-controller='TrelloCtrl'>
-              <div id="loggedout" ng-hide="isLoggedIn"> <a ng-click="login()" id="connectLink">Connect To Trello</a></div>
-              <div id="loggedin" ng-show="isLoggedIn"><div id="header">Logged in to as <span id="fullName">{{fullName}}</span></div>  <a ng-click="logout()" id="disconnect" href="#">Log Out</a></div>
-
-                <ui id="loggedin">
-                  <li id="fullName"></li>
-                  <li class="divider"></li>
-                  <a id="disconnect" href="#">Log Out</a>
-                </ui>
-              </ul>
-          </li>
-        </ul>
-      </div>
-
+      <div class="collapse navbar-collapse navbar-collapse-1" ng-controller="TrelloCtrl">
+           <ul class="nav navbar-nav navbar-utility">
+             <li class="dropdown">
+               <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                 <span class="pficon pficon-user"></span> Trello <b class="caret"></b>
+               </a>
+               <ul class="dropdown-menu">
+                 <li ng-hide='authorized'>
+                   <button ng-click='authorize()' class='btn btn-link'>authorize</button>
+                 </li>
+                 <li ng-show='authorized'> {{ full_name}} </li>
+                 <li ng-show='authorized' class="divider"></li>
+                 <li ng-show='authorized'>
+                   <button class='btn btn-link' ng-click='deauthorize()'>deauthorize</button>
+                 </li>
+               </ul>
+             </li>
+           </ul>
+         </div>
     </nav>
 
     <div class="container-fluid">
-      <div ng-view></div>
+      <div class="row">
+         <div class="col-sm-8 col-md-9">
+           <div class="page-header page-header-bleed-right">
+             <div class="actions pull-right">
+               <a href="#"><span class="pficon pficon-refresh"></span> Refresh Results</a>
+             </div>
+             <h1><a href="https://trello.com/b/WZ2gjtnR/systems-engineering-projects-and-status">current assignments (WIP)</a></h1>
+           </div>
+
+           <div class="row">
+             <div class="col-sm-4">
+               <div id="syseng-chart"></div>
+             </div>
+             <div class="col-sm-4">
+               <div id="perfteam-chart"></div>
+             </div>
+             <div class="col-sm-4">
+               <div id="ux-chart"></div>
+             </div>
+           </div>
+
+           <hr>
+           <h2 class="h4">Tasks by Person</h2>
+           <div id=output>
+           <table class="table">
+             <tr>
+               <th>Status</th>
+               <th>Location Data</th>
+                <th>Hosts</th>
+              </tr>
+              <tr>
+                <td><span class="label label-success">New</span></td>
+                <td><strong>Fusce leo massa</strong><br>Created March 05, 2014 08:34:36 AM</td>
+                <td><span class="label label-default">11</span></td>
+              </tr>
+              <tr>
+                <td><span class="label label-success">New</span></td>
+                <td><strong>Iaculis at dapibus eget</strong><br>Created March 03, 2014 20:32:12 AM</td>
+                <td><span class="label label-default">9</span></td>
+              </tr>
+              <tr>
+                <td><span class="label label-default">Disabled</span></td>
+                <td><strong>Dapibus nec metus</strong><br>Created March 03, 2014 19:11:56 AM</td>
+                <td><span class="label label-default">25</span></td>
+              </tr>
+            </table>
+          </div><!-- output -->
+
+            <hr>
+          </div><!-- /col -->
+          <div class="col-sm-4 col-md-3 sidebar-pf sidebar-pf-right">
+            <div class="sidebar-header sidebar-header-bleed-left sidebar-header-bleed-right">
+              <div class="actions pull-right">
+                <a href="#">Clear Messages</a>
+              </div>
+              <h2 class="h5">Latest Notifications</h2>
+            </div>
+            <p><a href="#">See all messages</a></p>
+          </div><!-- /col -->
+        </div><!-- /row -->
+
     </div>
 
-    <div class="footer">
-      <div class="container">
-        <p>Systems Engineering</p>
+    <footer class="footer">
+      <div class="container-fluid">
+        <p class="text-muted">This is Systems Engineering.</p>
       </div>
-    </div>
+    </footer>
 
     <!-- build:js(.) scripts/vendor.js -->
     <!-- bower:js -->
@@ -114,13 +171,13 @@ var markdownConverter = new showdown.Converter();
     <!-- endbower -->
     <!-- endbuild -->
 
+    <script src="https://api.trello.com/1/client.js?key=e5138b5715c50cc6b98b9d52e730c54d"></script>
+
     <!-- build:js({.tmp,app}) scripts/scripts.js -->
     <script src="scripts/app.js"></script>
     <script src="scripts/controllers/main.js"></script>
     <script src="scripts/controllers/trello.js"></script>
     <!-- endbuild -->
-
-    <script src="https://api.trello.com/1/client.js?key=e5138b5715c50cc6b98b9d52e730c54d"></script>
 
 </body>
 </html>

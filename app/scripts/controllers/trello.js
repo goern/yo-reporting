@@ -9,80 +9,89 @@
 */
 angular.module('projectApp')
 .controller('TrelloCtrl', function ($scope) {
-  $scope.board_id = 'WZ2gjtnR';
-  $scope.users = [];
-  $scope.cards = [];
-  $scope.comments = [];
-  $scope.authorized = Trello.authorized;
+  $scope.boardFilter = '';
+  $scope.boards = [];
+  $scope.authorized = false;
+  $scope.full_name = 'N.N.';
 
-  $scope.logout = function () {
-    Trello.deauthorize();
-  };
-  $scope.login = function () {
-    Trello.authorize({
-      type: "popup",
-      scope: {
-        read: true,
-        write: false
-      },
-      success: onAuthorize
-    });
-  };
-
-  function onAuthorize() {
-    if (!Trello.authorized()) {
-      return;
-    }
-
-    Trello.members.get("me", function (member) {
-      $scope.fullName = member.fullName;
-    });
-
+  var onAuthorize = function( ) {
     $scope.authorized = true;
-  }
 
-  $scope.authorize = function() {
-    Trello.authorize({
+    Trello.get('members/me/', function(member) {
+      $scope.full_name = member.fullName;
+    });
+
+    Trello.get( 'members/me/boards', { lists: 'open' }, function( boards ) {
+      Trello.get( 'members/me/cards/visible', function( cards ) {
+        var result = [];
+        boards.filter( function( b ) { return b.closed === false; } )
+        .forEach( function( board ) {
+
+          var doingList = board.lists.filter( function( list ) {
+            return list.name.toLowerCase( ) === 'doing';
+          } );
+
+          if( doingList.length ) {
+            var idListDoing = doingList[ 0 ].id;
+            var doingCards = cards.filter( function( card ) {
+              return card.idList === idListDoing;
+            } );
+          } else {
+            doingCards = [];
+          }
+
+          var nextList = board.lists.filter( function( list ) {
+            return list.name.toLowerCase( ) === 'next';
+          } );
+
+          if( nextList.length ) {
+            var idListNext = nextList[ 0 ].id;
+            var nextCards = cards.filter( function( card ) {
+              return card.idList === idListNext;
+            } );
+          } else {
+            nextCards = [];
+          }
+
+          var values = {
+            boardName: board.name,
+            boardId: board.id,
+            boardUrl: board.url,
+            nextCards: nextCards,
+            doingCards: doingCards
+          };
+          result.push( values );
+        } );
+        $scope.$apply( function( ) {
+          $scope.boards = result;
+          $scope.boards.forEach( function( board ) {
+            board.hasCards = ( board.doingCards.length > 0 ) || ( board.nextCards.length > 0 );
+          } );
+        } );
+      } );
+    } );
+  };
+
+  $scope.refresh = function( ) {
+    onAuthorize( );
+  };
+
+  $scope.authorize = function( ) {
+    Trello.authorize( {
       type: 'popup',
-      scope: {
-        read: true,
-        write: false
-      },
-      success: function() {
-        if (!Trello.authorized()) {
-          return;
-        }
-        if (!$scope.authorized) {
-          // get all my data
-        }
-        $scope.authorized = true;
-      }
-    });
-  };
-  $scope.fetchComments = function() {
-    Trello.get("boards/" + $scope.board_id + "/actions", {
-      limit: 100,
-      filter: 'commentCard'
-    }, function(data) {
-      $scope.$apply(function() {
-        return $scope.comments = data;
-      });
-    });
-  };
-  $scope.openCard = function(card_id) {
-    Trello.get("cards/" + card_id, function(data) {
-      window.open(data.url, 'somename');
-    });
+      name: 'SysEng Reporting',
+      success: onAuthorize
+    } );
   };
 
-  Trello.authorize({
+  $scope.deauthorize = function( ) {
+    Trello.deauthorize( );
+    $scope.authorized = false;
+    $scope.boards = [];
+  };
+
+  Trello.authorize( {
     interactive: false,
     success: onAuthorize
-  });
-
-  $scope.$watch(function () {
-    return Trello.authorized();
-  }, function (val) {
-    $scope.isLoggedIn = val;
-  });
+  } );
 });

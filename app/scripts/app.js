@@ -20,14 +20,7 @@ angular
   'patternfly.charts',
   'ui.bootstrap'
 ])
-.config(function ($routeProvider) {
-  $routeProvider
-  .when('/', {
-    templateUrl: 'views/main.html',
-    controller: 'MainCtrl',
-    controllerAs: 'main'
-  })
-  .otherwise({
-    redirectTo: '/'
+.config(function($httpProvider) {
+    //Enable cross domain calls
+    $httpProvider.defaults.useXDomain = true;
   });
-});

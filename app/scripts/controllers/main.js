@@ -15,6 +15,7 @@ angular.module('projectApp')
       'Karma'
     ];
 
-    this.message = 'thanks'
+    this.message = 'thanks';
+    
     $scope.navbarCollapsed = true;
   });
