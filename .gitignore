@@ -5,4 +5,5 @@
 /bower_components
 /home/.npm
 /home/.cache
+/home/.bash_history
 /root
