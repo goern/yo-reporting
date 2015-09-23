@@ -14,7 +14,6 @@ WORKDIR "/project"
 ENV HOME /home/yeoman
 USER yeoman
 
-EXPOSE 3001 9000
+EXPOSE 3001 9000 35729
 
 CMD "/bin/bash"
-LABEL RUN="docker run --interactive --tty --rm --net=host -v `pwd`:/project -v `pwd`/root:/root -v `pwd`/home:/home/yeoman IMAGE"
