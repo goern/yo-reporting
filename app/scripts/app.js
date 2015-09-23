@@ -17,7 +17,8 @@ angular
   'ngSanitize',
   'ngTouch',
   'patternfly',
-  'patternfly.charts'
+  'patternfly.charts',
+  'ui.bootstrap'
 ])
 .config(function ($routeProvider) {
   $routeProvider
@@ -26,32 +27,7 @@ angular
     controller: 'MainCtrl',
     controllerAs: 'main'
   })
-  .when('/about', {
-    templateUrl: 'views/about.html',
-    controller: 'AboutCtrl',
-    controllerAs: 'about'
-  })
-  .when('/login', {
-    templateUrl: 'views/about.html',
-    controller: 'LoginCtrl',
-    controllerAs: 'login'
-  })
-  .when('/contact', {
-    templateUrl: 'views/contact.html',
-    controller: 'ContactCtrl',
-    controllerAs: 'contact'
-  })
   .otherwise({
     redirectTo: '/'
   });
 });
-
-var opt = {
-  type: "popup",
-  name: "SysEng Reporting",
-  scope: { read: true },
-  success: onSuccess,
-  error: onError
-};
-
-Trello.authorize(opt);

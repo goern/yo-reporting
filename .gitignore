@@ -6,4 +6,6 @@
 /home/.npm
 /home/.cache
 /home/.bash_history
+/home/.node-gyp/
+/npm-debug.log
 /root

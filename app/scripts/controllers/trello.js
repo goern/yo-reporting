@@ -9,9 +9,37 @@
 */
 angular.module('projectApp')
 .controller('TrelloCtrl', function ($scope) {
-  $scope.board_id = '519394de1fb3e3b9110042c7';
+  $scope.board_id = 'WZ2gjtnR';
+  $scope.users = [];
+  $scope.cards = [];
   $scope.comments = [];
   $scope.authorized = Trello.authorized;
+
+  $scope.logout = function () {
+    Trello.deauthorize();
+  };
+  $scope.login = function () {
+    Trello.authorize({
+      type: "popup",
+      scope: {
+        read: true,
+        write: false
+      },
+      success: onAuthorize
+    });
+  };
+
+  function onAuthorize() {
+    if (!Trello.authorized()) {
+      return;
+    }
+
+    Trello.members.get("me", function (member) {
+      $scope.fullName = member.fullName;
+    });
+
+    $scope.authorized = true;
+  }
 
   $scope.authorize = function() {
     Trello.authorize({
@@ -25,7 +53,7 @@ angular.module('projectApp')
           return;
         }
         if (!$scope.authorized) {
-          $scope.fetchComments();
+          // get all my data
         }
         $scope.authorized = true;
       }
@@ -46,4 +74,15 @@ angular.module('projectApp')
       window.open(data.url, 'somename');
     });
   };
+
+  Trello.authorize({
+    interactive: false,
+    success: onAuthorize
+  });
+
+  $scope.$watch(function () {
+    return Trello.authorized();
+  }, function (val) {
+    $scope.isLoggedIn = val;
+  });
 });

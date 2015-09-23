@@ -25,7 +25,9 @@ module.exports = function(config) {
       'bower_components/jquery/dist/jquery.js',
       'bower_components/angular/angular.js',
       'bower_components/angular-animate/angular-animate.js',
+      'bower_components/angular-bootstrap/ui-bootstrap-tpls.js',
       'bower_components/angular-cookies/angular-cookies.js',
+      'bower_components/angular-patternfly/dist/angular-patternfly.js',
       'bower_components/angular-resource/angular-resource.js',
       'bower_components/angular-route/angular-route.js',
       'bower_components/angular-sanitize/angular-sanitize.js',
@@ -42,7 +44,6 @@ module.exports = function(config) {
       'bower_components/google-code-prettify/bin/prettify.min.js',
       'bower_components/matchHeight/jquery.matchHeight-min.js',
       'bower_components/patternfly/dist/js/patternfly.js',
-      'bower_components/angular-patternfly/dist/angular-patternfly.js',
       'bower_components/angular-mocks/angular-mocks.js',
       // endbower
       "app/scripts/**/*.js",

@@ -8,6 +8,7 @@
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
     <!-- build:css(.) styles/vendor.css -->
     <!-- bower:css -->
+    <link rel="stylesheet" href="bower_components/angular-patternfly/dist/styles/angular-patternfly.css" />
     <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
     <link rel="stylesheet" href="bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.css" />
     <link rel="stylesheet" href="bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker3.css" />
@@ -21,7 +22,6 @@
     <link rel="stylesheet" href="bower_components/google-code-prettify/bin/prettify.min.css" />
     <link rel="stylesheet" href="bower_components/patternfly/dist/css/patternfly.css" />
     <link rel="stylesheet" href="bower_components/patternfly/dist/css/patternfly-additions.css" />
-    <link rel="stylesheet" href="bower_components/angular-patternfly/dist/styles/angular-patternfly.css" />
     <!-- endbower -->
     <!-- endbuild -->
     <!-- build:css(.tmp) styles/main.css -->
@@ -62,11 +62,9 @@ var markdownConverter = new showdown.Converter();
               Trello <b class="caret"></b>
             </a>
             <ul class="dropdown-menu" ng-controller='TrelloCtrl'>
-                <li id=loggedout>
-                  <div ng-if='!authorized()'>
-                    <a ng-click='authorize()'>Log in</a>
-                  </div>
-                </li>
+              <div id="loggedout" ng-hide="isLoggedIn"> <a ng-click="login()" id="connectLink">Connect To Trello</a></div>
+              <div id="loggedin" ng-show="isLoggedIn"><div id="header">Logged in to as <span id="fullName">{{fullName}}</span></div>  <a ng-click="logout()" id="disconnect" href="#">Log Out</a></div>
+
                 <ui id="loggedin">
                   <li id="fullName"></li>
                   <li class="divider"></li>
@@ -94,7 +92,9 @@ var markdownConverter = new showdown.Converter();
     <script src="bower_components/jquery/dist/jquery.js"></script>
     <script src="bower_components/angular/angular.js"></script>
     <script src="bower_components/angular-animate/angular-animate.js"></script>
+    <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
     <script src="bower_components/angular-cookies/angular-cookies.js"></script>
+    <script src="bower_components/angular-patternfly/dist/angular-patternfly.js"></script>
     <script src="bower_components/angular-resource/angular-resource.js"></script>
     <script src="bower_components/angular-route/angular-route.js"></script>
     <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
@@ -111,7 +111,6 @@ var markdownConverter = new showdown.Converter();
     <script src="bower_components/google-code-prettify/bin/prettify.min.js"></script>
     <script src="bower_components/matchHeight/jquery.matchHeight-min.js"></script>
     <script src="bower_components/patternfly/dist/js/patternfly.js"></script>
-    <script src="bower_components/angular-patternfly/dist/angular-patternfly.js"></script>
     <!-- endbower -->
     <!-- endbuild -->
 
