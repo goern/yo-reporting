@@ -1,169 +1,177 @@
 <!doctype html>
 <html ng-app="projectApp">
-  <head>
-    <meta charset="utf-8">
-    <title>Systems Engineering Reporting</title>
-    <meta name="description" content="This is a Systems Engineering Reporting tool.">
-    <meta name="viewport" content="width=device-width">
-    <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
-    <!-- build:css(.) styles/vendor.css -->
-    <!-- bower:css -->
-    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
-    <link rel="stylesheet" href="bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.css" />
-    <link rel="stylesheet" href="bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker3.css" />
-    <link rel="stylesheet" href="bower_components/bootstrap-select/dist/css/bootstrap-select.css" />
-    <link rel="stylesheet" href="bower_components/bootstrap-treeview/dist/bootstrap-treeview.min.css" />
-    <link rel="stylesheet" href="bower_components/c3/c3.css" />
-    <link rel="stylesheet" href="bower_components/datatables/media/css/jquery.dataTables.css" />
-    <link rel="stylesheet" href="bower_components/datatables-colreorder/css/dataTables.colReorder.css" />
-    <link rel="stylesheet" href="bower_components/datatables-colvis/css/dataTables.colVis.css" />
-    <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.css" />
-    <link rel="stylesheet" href="bower_components/google-code-prettify/bin/prettify.min.css" />
-    <link rel="stylesheet" href="bower_components/patternfly/dist/css/patternfly.css" />
-    <link rel="stylesheet" href="bower_components/patternfly/dist/css/patternfly-additions.css" />
-    <!-- endbower -->
-    <!-- endbuild -->
-    <!-- build:css(.tmp) styles/main.css -->
-    <link rel="stylesheet" href="styles/main.css">
-    <!-- endbuild -->
+<head>
+  <meta charset="utf-8">
+  <title>Systems Engineering Reporting</title>
+  <meta name="description" content="This is a Systems Engineering Reporting tool.">
+  <meta name="viewport" content="width=device-width">
+  <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+  <!-- build:css(.) styles/vendor.css -->
+  <!-- bower:css -->
+  <link rel="stylesheet" href="bower_components/angular-patternfly/dist/styles/angular-patternfly.css" />
+  <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
+  <link rel="stylesheet" href="bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.css" />
+  <link rel="stylesheet" href="bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker3.css" />
+  <link rel="stylesheet" href="bower_components/bootstrap-select/dist/css/bootstrap-select.css" />
+  <link rel="stylesheet" href="bower_components/bootstrap-treeview/dist/bootstrap-treeview.min.css" />
+  <link rel="stylesheet" href="bower_components/c3/c3.css" />
+  <link rel="stylesheet" href="bower_components/datatables/media/css/jquery.dataTables.css" />
+  <link rel="stylesheet" href="bower_components/datatables-colreorder/css/dataTables.colReorder.css" />
+  <link rel="stylesheet" href="bower_components/datatables-colvis/css/dataTables.colVis.css" />
+  <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.css" />
+  <link rel="stylesheet" href="bower_components/google-code-prettify/bin/prettify.min.css" />
+  <link rel="stylesheet" href="bower_components/patternfly/dist/css/patternfly.css" />
+  <link rel="stylesheet" href="bower_components/patternfly/dist/css/patternfly-additions.css" />
+  <!-- endbower -->
+  <!-- endbuild -->
+  <!-- build:css(.tmp) styles/main.css -->
+  <link rel="stylesheet" href="styles/main.css">
+  <!-- endbuild -->
 
-<script>
-var boardId = "WZ2gjtnR"; // FIXME
-// var markdownConverter = new showdown.Converter();
-</script>
+  <script>
+  var boardId = "WZ2gjtnR"; // FIXME
+  // var markdownConverter = new showdown.Converter();
+  </script>
 
-  </head>
-  <body>
-    <!--[if lte IE 8]>
-      <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
-    <![endif]-->
+</head>
+<body>
+  <!--[if lte IE 8]>
+  <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+  <![endif]-->
 
-    <nav class="navbar navbar-default navbar-pf" role="navigation">
-      <!-- Brand and toggle get grouped for better mobile display -->
-      <div class="navbar-header">
-        <button type="button" class="navbar-toggle" ng-click="navbarCollapsed = !navbarCollapsed">
-          <span class="sr-only">Toggle navigation</span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-        </button>
-        <a class="navbar-brand" href="#">
-          Systems Design and Engineering
-        </a>
-      </div>
-
-      <div class="collapse navbar-collapse navbar-collapse-1" ng-controller="TrelloCtrl">
-           <ul class="nav navbar-nav navbar-utility">
-             <li class="dropdown">
-               <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                 <span class="pficon pficon-user"></span> Trello <b class="caret"></b>
-               </a>
-               <ul class="dropdown-menu">
-                 <li ng-hide='authorized'>
-                   <button ng-click='authorize()' class='btn btn-link'>authorize</button>
-                 </li>
-                 <li ng-show='authorized'> {{ full_name}} </li>
-                 <li ng-show='authorized' class="divider"></li>
-                 <li ng-show='authorized'>
-                   <button class='btn btn-link' ng-click='deauthorize()'>deauthorize</button>
-                 </li>
-               </ul>
-             </li>
-           </ul>
-         </div>
-    </nav>
-
-    <div class="container-fluid">
-      <div class="row">
-         <div class="col-sm-8 col-md-9">
-           <div class="page-header page-header-bleed-right">
-             <div class="actions pull-right">
-               <a href="#"><span class="pficon pficon-refresh"></span> Refresh Results</a>
-             </div>
-             <h1><a href="https://trello.com/b/WZ2gjtnR/systems-engineering-projects-and-status">current assignments (WIP)</a></h1>
-           </div>
-
-           <div class="row">
-             <div class="col-sm-4">
-               <div id="syseng-chart"></div>
-             </div>
-             <div class="col-sm-4">
-               <div id="perfteam-chart"></div>
-             </div>
-             <div class="col-sm-4">
-               <div id="ux-chart"></div>
-             </div>
-           </div>
-
-           <hr>
-           <h2 class="h4">Tasks by Person</h2>
-           <div id="output" ng-controller="TrelloCtrl">
-           <table class="table">
-             <tr>
-               <th>ID</th><th>Title</th><th>Hosts</th>
-              </tr>
-              <tr ng-repeat="card in cards">
-                <td><span class="label label-success">{{ card.id }}</span></td>
-                <td>{{ card.name }}</td>
-              </tr>
-            </table>
-          </div><!-- output -->
-
-            <hr>
-          </div><!-- /col -->
-          <div class="col-sm-4 col-md-3 sidebar-pf sidebar-pf-right">
-            <div class="sidebar-header sidebar-header-bleed-left sidebar-header-bleed-right">
-              <div class="actions pull-right">
-                <a href="#">Clear Messages</a>
-              </div>
-              <h2 class="h5">Latest Notifications</h2>
-            </div>
-            <p><a href="#">See all messages</a></p>
-          </div><!-- /col -->
-        </div><!-- /row -->
-
+  <nav class="navbar navbar-default navbar-pf" role="navigation">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" ng-click="navbarCollapsed = !navbarCollapsed">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="#">
+        Systems Design and Engineering
+      </a>
     </div>
 
-    <footer class="footer">
-      <div class="container-fluid">
-        <p class="text-muted">This is Systems Engineering.</p>
-      </div>
-    </footer>
+    <div class="collapse navbar-collapse navbar-collapse-1" ng-controller="TrelloCtrl">
+      <ul class="nav navbar-nav navbar-utility">
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+            <span class="pficon pficon-user"></span> Trello <b class="caret"></b>
+          </a>
+          <ul class="dropdown-menu">
+            <li ng-hide='authorized'>
+              <button ng-click='authorize()' class='btn btn-link'>authorize</button>
+            </li>
+            <li ng-show='authorized'> {{ full_name}} </li>
+            <li ng-show='authorized' class="divider"></li>
+            <li ng-show='authorized'>
+              <button class='btn btn-link' ng-click='deauthorize()'>deauthorize</button>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </nav>
 
-    <!-- build:js(.) scripts/vendor.js -->
-    <!-- bower:js -->
-    <script src="bower_components/jquery/dist/jquery.js"></script>
-    <script src="bower_components/angular/angular.js"></script>
-    <script src="bower_components/angular-animate/angular-animate.js"></script>
-    <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
-    <script src="bower_components/angular-cookies/angular-cookies.js"></script>
-    <script src="bower_components/angular-patternfly/dist/angular-patternfly.js"></script>
-    <script src="bower_components/angular-resource/angular-resource.js"></script>
-    <script src="bower_components/angular-route/angular-route.js"></script>
-    <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
-    <script src="bower_components/angular-touch/angular-touch.js"></script>
-    <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
-    <script src="bower_components/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
-    <script src="bower_components/bootstrap-select/dist/js/bootstrap-select.js"></script>
-    <script src="bower_components/bootstrap-treeview/dist/bootstrap-treeview.min.js"></script>
-    <script src="bower_components/d3/d3.js"></script>
-    <script src="bower_components/c3/c3.js"></script>
-    <script src="bower_components/datatables/media/js/jquery.dataTables.js"></script>
-    <script src="bower_components/datatables-colreorder/js/dataTables.colReorder.js"></script>
-    <script src="bower_components/datatables-colvis/js/dataTables.colVis.js"></script>
-    <script src="bower_components/google-code-prettify/bin/prettify.min.js"></script>
-    <script src="bower_components/matchHeight/jquery.matchHeight-min.js"></script>
-    <script src="bower_components/patternfly/dist/js/patternfly.js"></script>
-    <!-- endbower -->
-    <!-- endbuild -->
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-sm-8 col-md-9">
+        <div class="page-header page-header-bleed-right">
+          <div class="actions pull-right" ng-controller="TrelloCtrl">
+            <a ng-click='refresh()'><span class="pficon pficon-refresh"></span> Refresh Results</a>
+          </div>
+          <h1><a href="https://trello.com/b/WZ2gjtnR/systems-engineering-projects-and-status">current assignments (WIP)</a></h1>
+        </div>
 
-    <script src="https://api.trello.com/1/client.js?key=e5138b5715c50cc6b98b9d52e730c54d"></script>
+        <div class="row" ng-controller="TrelloCtrl">
+          <span>total cards: {{ num_cards_total }}</span>
+          <div class="col-sm-4">
+            <div id="syseng-chart"></div>
+          </div>
+          <div class="col-sm-4">
+            <div id="projectgroup-chart"></div>
+          </div>
+          <div class="col-sm-4">
+            <div id="product-chart"></div>
+          </div>
+        </div>
 
-    <!-- build:js({.tmp,app}) scripts/scripts.js -->
-    <script src="scripts/app.js"></script>
-    <script src="scripts/controllers/main.js"></script>
-    <script src="scripts/controllers/trello.js"></script>
-    <!-- endbuild -->
+        <hr/>
+        <div class="container-fluid" ng-controller="TrelloCtrl">
+          <div class="col-md-12">
+            <div id="cardDataTable" ng-repeat="item in cards" class="col-md-12">
+              <div class="row">
+                <div class="col-md-2">
+                  <span>{{item.owner}}</span>
+                </div>
+                <div class="col-md-8">
+                  <span><a href="{{ item.url }}">{{ item.title }}</a></span>
+                </div>
+                <div class="col-md-2">
+                  <span>...</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <hr/>
+      </div><!-- /col -->
+      <div class="col-sm-4 col-md-3 sidebar-pf sidebar-pf-right">
+        <div class="sidebar-header sidebar-header-bleed-left sidebar-header-bleed-right">
+          <div class="actions pull-right">
+            <a href="#">Clear Messages</a>
+          </div>
+          <h2 class="h5">Latest Notifications</h2>
+        </div>
+        <p><a href="#">See all messages</a></p>
+      </div><!-- /col -->
+    </div><!-- /row -->
+
+  </div>
+
+  <footer class="footer">
+    <div class="container-fluid">
+      <p class="text-muted">This is Systems Engineering.</p>
+    </div>
+  </footer>
+
+  <!-- build:js(.) scripts/vendor.js -->
+  <!-- bower:js -->
+  <script src="bower_components/jquery/dist/jquery.js"></script>
+  <script src="bower_components/angular/angular.js"></script>
+  <script src="bower_components/angular-animate/angular-animate.js"></script>
+  <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+  <script src="bower_components/angular-cookies/angular-cookies.js"></script>
+  <script src="bower_components/angular-patternfly/dist/angular-patternfly.js"></script>
+  <script src="bower_components/angular-resource/angular-resource.js"></script>
+  <script src="bower_components/angular-route/angular-route.js"></script>
+  <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
+  <script src="bower_components/angular-touch/angular-touch.js"></script>
+  <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
+  <script src="bower_components/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
+  <script src="bower_components/bootstrap-select/dist/js/bootstrap-select.js"></script>
+  <script src="bower_components/bootstrap-treeview/dist/bootstrap-treeview.min.js"></script>
+  <script src="bower_components/d3/d3.js"></script>
+  <script src="bower_components/c3/c3.js"></script>
+  <script src="bower_components/datatables/media/js/jquery.dataTables.js"></script>
+  <script src="bower_components/datatables-colreorder/js/dataTables.colReorder.js"></script>
+  <script src="bower_components/datatables-colvis/js/dataTables.colVis.js"></script>
+  <script src="bower_components/google-code-prettify/bin/prettify.min.js"></script>
+  <script src="bower_components/matchHeight/jquery.matchHeight-min.js"></script>
+  <script src="bower_components/patternfly/dist/js/patternfly.js"></script>
+  <!-- endbower -->
+  <!-- endbuild -->
+
+  <script src="https://api.trello.com/1/client.js?key=e5138b5715c50cc6b98b9d52e730c54d"></script>
+
+  <!-- build:js({.tmp,app}) scripts/scripts.js -->
+  <script src="scripts/app.js"></script>
+  <script src="scripts/miniset.js"></script>
+  <script src="scripts/controllers/main.js"></script>
+  <script src="scripts/controllers/trello.js"></script>
+  <!-- endbuild -->
 
 </body>
 </html>
