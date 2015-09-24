@@ -18,6 +18,30 @@ angular.module('projectApp')
   $scope.cards_per_owner = new MiniSet();
   $scope.authorized = false;
   $scope.full_name = 'N.N.';
+  $scope.all_tags = new MiniSet();
+
+  $scope.syseng_cards_chart_config = {
+    "donut": {
+      "title":"Status",
+      "label":{"show":false},
+      "width":25
+     },
+     "size": {"height":130},
+     "legend": {"show":false},
+     "color": {"pattern":["#3f9c35","#ec7a08", "#cc0000"]},
+     "tooltip": {},
+     "data": {
+       "columns": [["ok", $scope.num_cards_ok], ["issues", $scope.num_cards_issues], ["blocked", $scope.num_cards_blocked]],
+       "type": "donut",
+       "groups": [["ok", "issues", "blocked"]]
+     }
+  };
+
+  $scope.syseng_cards_data = {
+    'ok': 12,
+    'issues': 3,
+    'blocked': 1
+  };
 
   $scope.eventText = '';
   var handleSelect = function (item, e) {
@@ -72,9 +96,26 @@ angular.module('projectApp')
     onDblClick: handleDblClick
   };
 
+  var get_tag_from_card = function(card) {
+    var re = /\[(.*?)\]/g;
+    var tags = new MiniSet();
+
+    var t = card.name.match(re);
+
+    if (t !== null) {
+      t.forEach(function(v, i, a) {
+        tags.add(v.substring(1,v.length-1));
+      });
+    }
+
+    return tags;
+  };
+
   var get_card_owner = function(card) {
+    $scope.all_tags = get_tag_from_card(card);
+
     return "owner";
-  }
+  };
 
   var get_data = function() {
     Trello.get('members/me/', function(member) {
@@ -85,16 +126,36 @@ angular.module('projectApp')
       Trello.get('boards/'+boardId+'/cards?members=true', function(cards) {
         lists.forEach(function(list) {
           if (!list.name.match(/!/)) {
+            console.log(list);
+
             cards.forEach(function(card) {
               if (!card.name.match(/!/)) {
                 if (card.idList === list.id) {
+                  var $owner = get_card_owner(card);
+
                   $scope.num_cards_total += 1;
 
-                  var $owner = get_card_owner(card);
+                  console.log(card);
+                  card.labels.forEach(function(v, i, a) {
+                    switch(v.name.toLowerCase()) {
+                      case 'ok':
+                        $scope.num_cards_ok += 1;
+                        break;
+                      case 'issues':
+                        $scope.num_cards_issues += 1;
+                        break;
+                      case 'blocked':
+                        $scope.num_cards_blocked += 1;
+                        break;
+                      default:
+                        break;
+                    }
+                  });
 
                   if ($scope.cards_per_owner.has($owner)) {
                     $scope.cards_per_owner[$owner] += 1;
-                  } else {
+                  }
+                  else {
                     $scope.cards_per_owner.add($owner);
                     $scope.cards_per_owner[$owner] = 1;
                   }
@@ -108,7 +169,8 @@ angular.module('projectApp')
                   };
                   $scope.cards.push(values);
 
-                  console.log($scope.cards_per_owner);
+                  $scope.syseng_cards_chart_config.data.columns = [["ok", $scope.num_cards_ok], ["issues", $scope.num_cards_issues], ["blocked", $scope.num_cards_blocked]];
+
                 }
               }
             });

@@ -34,7 +34,7 @@
   </script>
 
 </head>
-<body>
+<body ng-controller="TrelloCtrl">
   <!--[if lte IE 8]>
   <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
   <![endif]-->
@@ -53,7 +53,7 @@
       </a>
     </div>
 
-    <div class="collapse navbar-collapse navbar-collapse-1" ng-controller="TrelloCtrl">
+    <div class="collapse navbar-collapse navbar-collapse-1">
       <ul class="nav navbar-nav navbar-utility">
         <li class="dropdown">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown">
@@ -78,27 +78,30 @@
     <div class="row">
       <div class="col-sm-8 col-md-9">
         <div class="page-header page-header-bleed-right">
-          <div class="actions pull-right" ng-controller="TrelloCtrl">
+          <div class="actions pull-right">
             <a ng-click='refresh()'><span class="pficon pficon-refresh"></span> Refresh Results</a>
           </div>
           <h1><a href="https://trello.com/b/WZ2gjtnR/systems-engineering-projects-and-status">current assignments (WIP)</a></h1>
         </div>
 
-        <div class="row" ng-controller="TrelloCtrl">
+        <div class="row">
           <span>total cards: {{ num_cards_total }}</span>
+          <span>ok: {{ num_cards_ok }}</span>
+          <span>issues: {{ num_cards_issues }}</span>
+          <span>blocked: {{ num_cards_blocked }}</span>
           <div class="col-sm-4">
-            <div id="syseng-chart"></div>
+            <div id="syseng_cards_chart" pf-c3-chart config="syseng_cards_chart_config"></div>
           </div>
           <div class="col-sm-4">
-            <div id="projectgroup-chart"></div>
+            <div id="projectgroup_chart"></div>
           </div>
           <div class="col-sm-4">
-            <div id="product-chart"></div>
+            <div id="product_chart"></div>
           </div>
-        </div>
+        </div><!-- charts row -->
 
         <hr/>
-        <div class="container-fluid" ng-controller="TrelloCtrl">
+        <div class="container-fluid">
           <div class="col-md-12">
             <div id="cardDataTable" ng-repeat="item in cards" class="col-md-12">
               <div class="row">
@@ -109,7 +112,7 @@
                   <span><a href="{{ item.url }}">{{ item.title }}</a></span>
                 </div>
                 <div class="col-md-2">
-                  <span>...</span>
+                  <span>{{ item.tags }}</span>
                 </div>
               </div>
             </div>
