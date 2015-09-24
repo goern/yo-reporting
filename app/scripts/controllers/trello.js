@@ -10,66 +10,38 @@
 angular.module('projectApp')
 .controller('TrelloCtrl', function ($scope) {
   $scope.boardFilter = '';
-  $scope.boards = [];
+  $scope.cards = [];
   $scope.authorized = false;
   $scope.full_name = 'N.N.';
 
-  var onAuthorize = function( ) {
+  var onAuthorize = function() {
     $scope.authorized = true;
 
     Trello.get('members/me/', function(member) {
       $scope.full_name = member.fullName;
     });
 
-    Trello.get( 'members/me/boards', { lists: 'open' }, function( boards ) {
-      Trello.get( 'members/me/cards/visible', function( cards ) {
-        var result = [];
-        boards.filter( function( b ) { return b.closed === false; } )
-        .forEach( function( board ) {
+    Trello.get('boards/'+boardId+'/lists', function(lists) {
+      var result = [];
 
-          var doingList = board.lists.filter( function( list ) {
-            return list.name.toLowerCase( ) === 'doing';
-          } );
-
-          if( doingList.length ) {
-            var idListDoing = doingList[ 0 ].id;
-            var doingCards = cards.filter( function( card ) {
-              return card.idList === idListDoing;
-            } );
-          } else {
-            doingCards = [];
+      Trello.get('boards/'+boardId+'/cards?members=true', function(cards) {
+        lists.forEach(function(list) {
+          if (!list.name.match(/!/)) {
+            cards.forEach(function(card) {
+                var values = {
+                  id: card.id,
+                  title: card.name,
+                  url: card.shortUrl
+                };
+                $scope.cards.push(values);
+                console.log(values);
+            });
           }
+        });
+      });
+    });
 
-          var nextList = board.lists.filter( function( list ) {
-            return list.name.toLowerCase( ) === 'next';
-          } );
-
-          if( nextList.length ) {
-            var idListNext = nextList[ 0 ].id;
-            var nextCards = cards.filter( function( card ) {
-              return card.idList === idListNext;
-            } );
-          } else {
-            nextCards = [];
-          }
-
-          var values = {
-            boardName: board.name,
-            boardId: board.id,
-            boardUrl: board.url,
-            nextCards: nextCards,
-            doingCards: doingCards
-          };
-          result.push( values );
-        } );
-        $scope.$apply( function( ) {
-          $scope.boards = result;
-          $scope.boards.forEach( function( board ) {
-            board.hasCards = ( board.doingCards.length > 0 ) || ( board.nextCards.length > 0 );
-          } );
-        } );
-      } );
-    } );
+    console.log($scope.cards);
   };
 
   $scope.refresh = function( ) {
@@ -87,7 +59,7 @@ angular.module('projectApp')
   $scope.deauthorize = function( ) {
     Trello.deauthorize( );
     $scope.authorized = false;
-    $scope.boards = [];
+    $scope.cards = [];
   };
 
   Trello.authorize( {

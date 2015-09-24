@@ -8,7 +8,6 @@
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
     <!-- build:css(.) styles/vendor.css -->
     <!-- bower:css -->
-    <link rel="stylesheet" href="bower_components/angular-patternfly/dist/styles/angular-patternfly.css" />
     <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
     <link rel="stylesheet" href="bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.css" />
     <link rel="stylesheet" href="bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker3.css" />
@@ -98,27 +97,14 @@ var boardId = "WZ2gjtnR"; // FIXME
 
            <hr>
            <h2 class="h4">Tasks by Person</h2>
-           <div id=output>
+           <div id="output" ng-controller="TrelloCtrl">
            <table class="table">
              <tr>
-               <th>Status</th>
-               <th>Location Data</th>
-                <th>Hosts</th>
+               <th>ID</th><th>Title</th><th>Hosts</th>
               </tr>
-              <tr>
-                <td><span class="label label-success">New</span></td>
-                <td><strong>Fusce leo massa</strong><br>Created March 05, 2014 08:34:36 AM</td>
-                <td><span class="label label-default">11</span></td>
-              </tr>
-              <tr>
-                <td><span class="label label-success">New</span></td>
-                <td><strong>Iaculis at dapibus eget</strong><br>Created March 03, 2014 20:32:12 AM</td>
-                <td><span class="label label-default">9</span></td>
-              </tr>
-              <tr>
-                <td><span class="label label-default">Disabled</span></td>
-                <td><strong>Dapibus nec metus</strong><br>Created March 03, 2014 19:11:56 AM</td>
-                <td><span class="label label-default">25</span></td>
+              <tr ng-repeat="card in cards">
+                <td><span class="label label-success">{{ card.id }}</span></td>
+                <td>{{ card.name }}</td>
               </tr>
             </table>
           </div><!-- output -->
