@@ -104,10 +104,10 @@
             <div id="cardDataTable" ng-repeat="item in cards" class="col-md-12">
               <div class="row">
                 <div class="col-md-2">
-                  <span class="label label-{{ item.status }}">&nbsp;</span> <span>{{item.owner}}</span>
+                  <span>{{item.owner}}</span>
                 </div>
                 <div class="col-md-7">
-                  <span><a href="{{ item.url }}">{{ item.title }}</a></span>
+                  <span class="label label-{{ item.status }}">&nbsp;</span> <span><a href="{{ item.url }}">{{ item.title }}</a></span>
                 </div>
                 <div class="col-md-3">
                   <span ng-repeat="tag in item.tags">{{ tag }} </span>

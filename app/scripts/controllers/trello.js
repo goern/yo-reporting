@@ -115,7 +115,7 @@ angular.module('projectApp')
 
   var get_tags_from_card = function(card) {
     return _get_tags_from_card(card).remove(get_card_owner(card));
-  }
+  };
 
   var get_card_owner = function(card) {
     var owner = '';
@@ -148,6 +148,7 @@ angular.module('projectApp')
                   var $status = ''; // this is for mapping a trello label name to bootstrap label classes
 
                   $scope.num_cards_total += 1;
+                  console.log(card);
 
                   card.labels.forEach(function(v, i, a) {
                     switch(v.name.toLowerCase()) {
@@ -175,9 +176,11 @@ angular.module('projectApp')
                     url: card.shortUrl,
                     description: card.desc,
                     tags: get_tags_from_card(card).keys(),
-                    status: $status
+                    status: $status,
+                    dateLastActivity: new Date(card.dateLastActivity)
                   };
                   $scope.cards.push(values);
+                  console.log(values);
 
                   $scope.syseng_cards_chart_config.data.columns = [["ok", $scope.num_cards_ok], ["issues", $scope.num_cards_issues], ["blocked", $scope.num_cards_blocked]];
 
