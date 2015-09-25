@@ -374,8 +374,8 @@ module.exports = function (grunt) {
           dest: '<%= yeoman.dist %>/images',
           src: ['generated/*']
         },
-        { expand: true, cwd: 'bower_components/bootstrap/dist', src: 'fonts/*', dest: '<%= yeoman.dist %>' },
-        { expand: true, cwd: 'bower_components/font-awesome/fonts/', src: ['**'], dest: '<%= yeoman.dist %>'},
+        { expand: true, cwd: 'bower_components/bootstrap/dist', src: 'fonts/*', dest: '<%= yeoman.dist %>/fonts' },
+        { expand: true, cwd: 'bower_components/font-awesome/fonts/', src: ['**'], dest: '<%= yeoman.dist %>/fonts'},
         { expand: true, cwd: 'bower_components/bootstrap/css/', src: ['bootstrap.css', 'bootstrap-theme.css'], dest: '<%= yeoman.dist %>'},
         { expand: true, cwd: 'bower_components/font-awesome/css/', src: ['fot-awesome.css'], dest: '<%= yeoman.dist %>'},
         { expand: true, cwd: 'bower_components/bootstrap-combobox/css/', src: ['**'], dest: '<%= yeoman.dist %>'},
@@ -383,7 +383,7 @@ module.exports = function (grunt) {
         { expand: true, cwd: 'bower_components/bootstrap-select/dist/css', src: ['bootstrap-select.css'], dest: '<%= yeoman.dist %>'},
         { expand: true, cwd: 'bower_components/c3/', src: ['c3.css'], dest: '<%= yeoman.dist %>'},
         { expand: true, cwd: 'bower_components/patternfly/dist/css', src: ['patternfly-additions.css', 'patternfly.css'], dest: '<%= yeoman.dist %>'},
-        { expand: true, cwd: 'bower_components/patternfly/dist/fonts', src: ['**'], dest: '<%= yeoman.dist %>'},
+        { expand: true, cwd: 'bower_components/patternfly/dist/fonts', src: ['**'], dest: '<%= yeoman.dist %>/fonts'},
       ]
     },
     styles: {
