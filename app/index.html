@@ -48,9 +48,7 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="#">
-        Systems Design and Engineering
-      </a>
+      <a class="navbar-brand" href="#">Systems Design and Engineering</a>
     </div>
 
     <div class="collapse navbar-collapse navbar-collapse-1">
@@ -106,17 +104,20 @@
             <div id="cardDataTable" ng-repeat="item in cards" class="col-md-12">
               <div class="row">
                 <div class="col-md-2">
-                  <span>{{item.owner}}</span>
+                  <span class="label label-{{ item.status }}">&nbsp;</span> <span>{{item.owner}}</span>
                 </div>
-                <div class="col-md-8">
+                <div class="col-md-7">
                   <span><a href="{{ item.url }}">{{ item.title }}</a></span>
                 </div>
-                <div class="col-md-2">
-                  <span>{{ item.tags }}</span>
+                <div class="col-md-3">
+                  <span ng-repeat="tag in item.tags">{{ tag }} </span>
                 </div>
               </div>
             </div>
           </div>
+          <h2 class="text-center" ng-hide='authorized'>
+            You need to <a ng-click='authorize()'>authorize</a> with Trello.
+          </h2>
         </div>
 
         <hr/>
@@ -124,11 +125,11 @@
       <div class="col-sm-4 col-md-3 sidebar-pf sidebar-pf-right">
         <div class="sidebar-header sidebar-header-bleed-left sidebar-header-bleed-right">
           <div class="actions pull-right">
-            <a href="#">Clear Messages</a>
+            <p style="display: none">fülltext</p>
           </div>
-          <h2 class="h5">Latest Notifications</h2>
+          <h2 class="h5">Some Documentation</h2>
         </div>
-        <p><a href="#">See all messages</a></p>
+        <p style="display: none">fülltext</p>
       </div><!-- /col -->
     </div><!-- /row -->
 
@@ -172,7 +173,6 @@
   <!-- build:js({.tmp,app}) scripts/scripts.js -->
   <script src="scripts/app.js"></script>
   <script src="scripts/miniset.js"></script>
-  <script src="scripts/controllers/main.js"></script>
   <script src="scripts/controllers/trello.js"></script>
   <!-- endbuild -->
 

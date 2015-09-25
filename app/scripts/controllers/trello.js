@@ -20,14 +20,16 @@ angular.module('projectApp')
   $scope.full_name = 'N.N.';
   $scope.all_tags = new MiniSet();
 
+  $scope.navbarCollapsed = true;
+
   $scope.syseng_cards_chart_config = {
     "donut": {
       "title":"Status",
       "label":{"show":false},
       "width":25
      },
-     "size": {"height":130},
-     "legend": {"show":false},
+     "size": { "height": 130 },
+     "legend": { "show": true },
      "color": {"pattern":["#3f9c35","#ec7a08", "#cc0000"]},
      "tooltip": {},
      "data": {
@@ -96,7 +98,7 @@ angular.module('projectApp')
     onDblClick: handleDblClick
   };
 
-  var get_tag_from_card = function(card) {
+  var _get_tags_from_card = function(card) {
     var re = /\[(.*?)\]/g;
     var tags = new MiniSet();
 
@@ -111,13 +113,26 @@ angular.module('projectApp')
     return tags;
   };
 
-  var get_card_owner = function(card) {
-    $scope.all_tags = get_tag_from_card(card);
+  var get_tags_from_card = function(card) {
+    return _get_tags_from_card(card).remove(get_card_owner(card));
+  }
 
-    return "owner";
+  var get_card_owner = function(card) {
+    var owner = '';
+    $scope.all_tags = _get_tags_from_card(card);
+
+    card.members.forEach(function(member) {
+      var username = member.username;
+
+      if ($scope.all_tags.has(username)) {
+        owner = username;
+      }
+    });
+
+    return owner;
   };
 
-  var get_data = function() {
+  $scope.get_data = function() {
     Trello.get('members/me/', function(member) {
       $scope.full_name = member.fullName;
     });
@@ -126,46 +141,41 @@ angular.module('projectApp')
       Trello.get('boards/'+boardId+'/cards?members=true', function(cards) {
         lists.forEach(function(list) {
           if (!list.name.match(/!/)) {
-            console.log(list);
-
             cards.forEach(function(card) {
               if (!card.name.match(/!/)) {
                 if (card.idList === list.id) {
                   var $owner = get_card_owner(card);
+                  var $status = ''; // this is for mapping a trello label name to bootstrap label classes
 
                   $scope.num_cards_total += 1;
 
-                  console.log(card);
                   card.labels.forEach(function(v, i, a) {
                     switch(v.name.toLowerCase()) {
                       case 'ok':
                         $scope.num_cards_ok += 1;
+                        $status = 'success';
                         break;
                       case 'issues':
                         $scope.num_cards_issues += 1;
+                        $status = 'warning';
                         break;
                       case 'blocked':
                         $scope.num_cards_blocked += 1;
+                        $status = 'danger';
                         break;
                       default:
                         break;
                     }
                   });
 
-                  if ($scope.cards_per_owner.has($owner)) {
-                    $scope.cards_per_owner[$owner] += 1;
-                  }
-                  else {
-                    $scope.cards_per_owner.add($owner);
-                    $scope.cards_per_owner[$owner] = 1;
-                  }
-
                   var values = {
                     id: card.id,
                     owner: $owner,
-                    title: card.name,
+                    title: card.name.replace("["+$owner+"]",''), // remove the owner-tag
                     url: card.shortUrl,
-                    description: card.desc
+                    description: card.desc,
+                    tags: get_tags_from_card(card).keys(),
+                    status: $status
                   };
                   $scope.cards.push(values);
 
@@ -180,20 +190,20 @@ angular.module('projectApp')
     });
   };
 
-  $scope.onAuthorized = function() {
+  var onAuthorized = function() {
     $scope.authorized = true;
-    get_data();
+    $scope.get_data();
   };
 
   $scope.refresh = function() {
-    get_data();
+    $scope.get_data();
   };
 
   $scope.authorize = function() {
     Trello.authorize({
       type: 'popup',
       name: 'SysEng Reporting',
-      success: $scope.onAuthorized
+      success: onAuthorized
     });
   };
 
@@ -203,8 +213,4 @@ angular.module('projectApp')
     $scope.cards = [];
   };
 
-  Trello.authorize( {
-    interactive: false,
-    success: get_data
-  });
 });

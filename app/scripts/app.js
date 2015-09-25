@@ -10,10 +10,7 @@
 */
 angular
 .module('projectApp', [
-  'ngAnimate',
   'ngCookies',
-  'ngResource',
-  'ngRoute',
   'ngSanitize',
   'ngTouch',
   'patternfly',
