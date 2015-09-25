@@ -7,5 +7,6 @@
 /home/.cache
 /home/.bash_history
 /home/.node-gyp/
+/home/.ssh/
 /npm-debug.log
 /root
