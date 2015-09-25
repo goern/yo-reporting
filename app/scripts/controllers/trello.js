@@ -25,7 +25,7 @@ angular.module('projectApp')
   $scope.syseng_cards_chart_config = {
     "donut": {
       "title":"Status",
-      "label":{"show":false},
+      "label":{ "show": false },
       "width":25
      },
      "size": { "height": 130 },
@@ -181,6 +181,8 @@ angular.module('projectApp')
 
                   $scope.syseng_cards_chart_config.data.columns = [["ok", $scope.num_cards_ok], ["issues", $scope.num_cards_issues], ["blocked", $scope.num_cards_blocked]];
 
+                  // http://jimhoskins.com/2012/12/17/angularjs-and-apply.html
+                  $scope.$apply();
                 }
               }
             });
@@ -211,6 +213,11 @@ angular.module('projectApp')
     Trello.deauthorize();
     $scope.authorized = false;
     $scope.cards = [];
+    $scope.num_cards_ok = 0;
+    $scope.num_cards_issues = 0;
+    $scope.num_cards_blocked = 0;
+    $scope.num_cards_total = 0;
+    $scope.syseng_cards_chart_config.data.columns = [["ok", $scope.num_cards_ok], ["issues", $scope.num_cards_issues], ["blocked", $scope.num_cards_blocked]];
   };
 
 });
