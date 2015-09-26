@@ -20,6 +20,9 @@ angular.module('projectApp')
   $scope.full_name = 'N.N.';
   $scope.all_tags = new MiniSet();
 
+  $scope.sortType = 'fullname'; // set the default sort type
+  $scope.sortReverse  = false;  // set the default sort order
+
   $scope.navbarCollapsed = true;
 
   $scope.syseng_cards_chart_config = {
