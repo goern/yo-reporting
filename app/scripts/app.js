@@ -13,11 +13,12 @@ angular
   'ngCookies',
   'ngSanitize',
   'ngTouch',
+  'ng-showdown',
   'patternfly',
   'patternfly.charts',
   'ui.bootstrap'
 ])
 .config(function($httpProvider) {
-    //Enable cross domain calls
-    $httpProvider.defaults.useXDomain = true;
-  });
+  //Enable cross domain calls
+  $httpProvider.defaults.useXDomain = true;
+});

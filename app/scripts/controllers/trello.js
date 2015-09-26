@@ -119,6 +119,7 @@ angular.module('projectApp')
 
   var get_card_owner = function(card) {
     var owner = '';
+    var fullname = '';
     $scope.all_tags = _get_tags_from_card(card);
 
     card.members.forEach(function(member) {
@@ -126,10 +127,11 @@ angular.module('projectApp')
 
       if ($scope.all_tags.has(username)) {
         owner = username;
+        fullname = member.fullName;
       }
     });
 
-    return owner;
+    return { 'userid': owner, 'fullname': fullname };
   };
 
   $scope.get_data = function() {
@@ -148,7 +150,7 @@ angular.module('projectApp')
                   var $status = ''; // this is for mapping a trello label name to bootstrap label classes
 
                   $scope.num_cards_total += 1;
-                  console.log(card);
+                  // console.log(card);
 
                   card.labels.forEach(function(v, i, a) {
                     switch(v.name.toLowerCase()) {
@@ -171,16 +173,24 @@ angular.module('projectApp')
 
                   var values = {
                     id: card.id,
-                    owner: $owner,
+                    owner: $owner['userid'],
+                    fullname: $owner['fullname'],
                     title: card.name.replace("["+$owner+"]",''), // remove the owner-tag
                     url: card.shortUrl,
                     description: card.desc,
                     tags: get_tags_from_card(card).keys(),
                     status: $status,
-                    dateLastActivity: new Date(card.dateLastActivity)
+                    dateLastActivity: new Date(card.dateLastActivity),
+                    stringLastActivity: moment(new Date(card.dateLastActivity)).fromNow()
                   };
                   $scope.cards.push(values);
-                  console.log(values);
+
+                  //  console.log(card.badges.comments);
+                  if (card.badges.comments > 0) {
+                    Trello.get('cards/'+card.id+'/actions?id=commentCard', function(comments) {
+                      values.lastComment = comments[0]['data']['text'];
+                    });
+                  }
 
                   $scope.syseng_cards_chart_config.data.columns = [["ok", $scope.num_cards_ok], ["issues", $scope.num_cards_issues], ["blocked", $scope.num_cards_blocked]];
 
@@ -208,6 +218,9 @@ angular.module('projectApp')
     Trello.authorize({
       type: 'popup',
       name: 'SysEng Reporting',
+      scope: {
+        read: true,
+        write: false },
       success: onAuthorized
     });
   };

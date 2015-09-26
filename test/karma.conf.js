@@ -43,7 +43,10 @@ module.exports = function(config) {
       'bower_components/datatables-colvis/js/dataTables.colVis.js',
       'bower_components/google-code-prettify/bin/prettify.min.js',
       'bower_components/matchHeight/jquery.matchHeight-min.js',
+      'bower_components/moment/moment.js',
       'bower_components/patternfly/dist/js/patternfly.js',
+      'bower_components/showdown/dist/showdown.js',
+      'bower_components/ng-showdown/dist/ng-showdown.js',
       'bower_components/angular-mocks/angular-mocks.js',
       // endbower
       "app/scripts/**/*.js",

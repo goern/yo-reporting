@@ -6,7 +6,7 @@ describe('Controller: TrelloCtrl', function () {
   beforeEach(module('projectApp'));
 
   var TrelloCtrl,
-    scope;
+  scope;
 
   // Initialize the controller and a mock scope
   beforeEach(inject(function ($controller, $rootScope) {
@@ -17,4 +17,8 @@ describe('Controller: TrelloCtrl', function () {
     });
   }));
 
+  // karma needs one test, at least one empty test
+  it('should have an empty list of cards within the scope', function () {
+    // need to add tests here FIXME
+  });
 });
