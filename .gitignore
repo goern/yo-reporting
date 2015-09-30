@@ -8,6 +8,6 @@
 /home/.bash_history
 /home/.node-gyp/
 /home/.ssh/
-/home/.config/configstore
+/home/.config/configstore/**
 /npm-debug.log
 /root

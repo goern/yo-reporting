@@ -19,6 +19,7 @@ angular.module('projectApp')
   $scope.authorized = false;
   $scope.full_name = 'N.N.';
   $scope.all_tags = new MiniSet();
+  $scope.project_group = [];
 
   $scope.sortType = 'fullname'; // set the default sort type
   $scope.sortReverse  = false;  // set the default sort order
@@ -117,7 +118,7 @@ angular.module('projectApp')
   };
 
   var get_tags_from_card = function(card) {
-    return _get_tags_from_card(card).remove(get_card_owner(card));
+    return _get_tags_from_card(card).remove(get_card_owner(card)['owner']);
   };
 
   var get_card_owner = function(card) {
@@ -137,10 +138,39 @@ angular.module('projectApp')
     return { 'userid': owner, 'fullname': fullname };
   };
 
+  var get_tag_project_mapping = function() {
+    Trello.get('boards/vcuJKaxt/lists', function(lists) {
+      Trello.get('boards/vcuJKaxt/cards', function(cards) {
+        lists.forEach(function(list) {
+          if (!list.name.match(/!/)) {
+            cards.forEach(function(card) {
+              var tag_list = new MiniSet();
+
+              if (!card.name.match(/!/)) {
+                if (card.idList == list.id) {
+                  tag_list.add(card.name);
+//                  console.log(card.name);
+                }
+              }
+
+              var values = { "projectgroup": list.name, "tags": tag_list };
+              $scope.project_group.push(values);
+              tag_list.clear();
+
+              // console.log($scope.project_group);
+            });
+          }
+        });
+      });
+    });
+  };
+
   $scope.get_data = function() {
     Trello.get('members/me/', function(member) {
       $scope.full_name = member.fullName;
     });
+
+    get_tag_project_mapping();
 
     Trello.get('boards/'+boardId+'/lists', function(lists) {
       Trello.get('boards/'+boardId+'/cards?members=true', function(cards) {
@@ -150,10 +180,10 @@ angular.module('projectApp')
               if (!card.name.match(/!/)) {
                 if (card.idList === list.id) {
                   var $owner = get_card_owner(card);
+                  var $tagstoprojects = get_tag_project_mapping();
                   var $status = ''; // this is for mapping a trello label name to bootstrap label classes
 
                   $scope.num_cards_total += 1;
-                  // console.log(card);
 
                   card.labels.forEach(function(v, i, a) {
                     switch(v.name.toLowerCase()) {
@@ -174,11 +204,13 @@ angular.module('projectApp')
                     }
                   });
 
+//                  console.log(card);
+
                   var values = {
                     id: card.id,
                     owner: $owner['userid'],
                     fullname: $owner['fullname'],
-                    title: card.name.replace("["+$owner+"]",''), // remove the owner-tag
+                    title: card.name.replace("["+$owner['userid']+"]",''), // remove the owner-tag
                     url: card.shortUrl,
                     description: card.desc,
                     tags: get_tags_from_card(card).keys(),
@@ -186,14 +218,15 @@ angular.module('projectApp')
                     dateLastActivity: new Date(card.dateLastActivity),
                     stringLastActivity: moment(new Date(card.dateLastActivity)).fromNow()
                   };
-                  $scope.cards.push(values);
 
-                  //  console.log(card.badges.comments);
                   if (card.badges.comments > 0) {
                     Trello.get('cards/'+card.id+'/actions?id=commentCard', function(comments) {
+                      // console.log(card.badges.comments + ': ' + comments);
                       values.lastComment = comments[0]['data']['text'];
                     });
                   }
+
+                  $scope.cards.push(values);
 
                   $scope.syseng_cards_chart_config.data.columns = [["ok", $scope.num_cards_ok], ["issues", $scope.num_cards_issues], ["blocked", $scope.num_cards_blocked]];
 

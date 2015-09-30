@@ -8,6 +8,7 @@
   <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
   <!-- build:css(.) styles/vendor.css -->
   <!-- bower:css -->
+  <link rel="stylesheet" href="bower_components/angular-patternfly/dist/styles/angular-patternfly.css" />
   <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
   <link rel="stylesheet" href="bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.css" />
   <link rel="stylesheet" href="bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker3.css" />
@@ -121,7 +122,7 @@
               </thead>
               <tbody>
                 <tr ng-repeat="item in cards | orderBy:sortType:sortReverse | filter:cardTitle">
-                  <td>{{ item.fullname }}</td>
+                  <td>{{ item.fullname }} <span ng-show='false'>{{ item.owner }}</span></td>
                   <td><span class="label label-{{ item.status }}">&nbsp;</span></td>
                   <td>
                     <a href="{{ item.url }}">{{ item.title }}</a><br/>

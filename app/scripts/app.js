@@ -13,7 +13,6 @@ angular
   'ngCookies',
   'ngSanitize',
   'ngTouch',
-  'ng-showdown',
   'patternfly',
   'patternfly.charts',
   'ui.bootstrap'
