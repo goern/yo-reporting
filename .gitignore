@@ -9,5 +9,6 @@
 /home/.node-gyp/
 /home/.ssh/
 /home/.config/configstore/**
+/home/.bashrc
 /npm-debug.log
 /root
