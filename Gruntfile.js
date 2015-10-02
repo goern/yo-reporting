@@ -375,7 +375,7 @@ module.exports = function (grunt) {
           src: ['generated/*']
         },
         { expand: true, cwd: 'bower_components/bootstrap/dist/fonts/', src: '**', dest: '<%= yeoman.dist %>/fonts' },
-        { expand: true, cwd: 'bower_components/font-awesome/fonts/', src: ['**'], dest: '<%= yeoman.dist %>/fonts'},
+        { expand: true, cwd: 'bower_components/font-awesome/fonts/', src: '**', dest: '<%= yeoman.dist %>/fonts'},
         { expand: true, cwd: 'bower_components/bootstrap/css/', src: ['bootstrap.css', 'bootstrap-theme.css'], dest: '<%= yeoman.dist %>'},
         { expand: true, cwd: 'bower_components/font-awesome/css/', src: ['fot-awesome.css'], dest: '<%= yeoman.dist %>'},
         { expand: true, cwd: 'bower_components/bootstrap-combobox/css/', src: ['**'], dest: '<%= yeoman.dist %>'},

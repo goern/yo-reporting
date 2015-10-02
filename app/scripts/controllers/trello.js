@@ -19,7 +19,7 @@ angular.module('projectApp')
   $scope.authorized = false;
   $scope.full_name = 'N.N.';
   $scope.all_tags = new MiniSet();
-  $scope.project_group = [];
+  $scope.projectgroup_map = [];
 
   $scope.sortType = 'fullname'; // set the default sort type
   $scope.sortReverse  = false;  // set the default sort order
@@ -49,27 +49,6 @@ angular.module('projectApp')
     'blocked': 1
   };
 
-  $scope.eventText = '';
-  var handleSelect = function (item, e) {
-    $scope.eventText = item.name + ' selected\n' + $scope.eventText;
-  };
-  var handleSelectionChange = function (selectedItems, e) {
-    $scope.eventText = selectedItems.length + ' items selected\n' + $scope.eventText;
-  };
-  var handleClick = function (item, e) {
-    $scope.eventText = item.name + ' clicked\n' + $scope.eventText;
-  };
-  var handleDblClick = function (item, e) {
-    $scope.eventText = item.name + ' double clicked\n' + $scope.eventText;
-  };
-  var handleCheckBoxChange = function (item, selected, e) {
-    $scope.eventText = item.name + ' checked: ' + item.selected + '\n' + $scope.eventText;
-  };
-
-  var checkDisabledItem = function(item) {
-    return $scope.showDisabled && (item.name === "John Smith");
-  };
-
   $scope.selectType = 'checkbox';
   $scope.updateSelectionType = function() {
     if ($scope.selectType === 'checkbox') {
@@ -92,14 +71,8 @@ angular.module('projectApp')
     dblClick: false,
     selectionMatchProp: 'name',
     selectedItems: [],
-    checkDisabled: checkDisabledItem,
     showSelectBox: false,
-    rowHeight: 36,
-    onSelect: handleSelect,
-    onSelectionChange: handleSelectionChange,
-    onCheckBoxChange: handleCheckBoxChange,
-    onClick: handleClick,
-    onDblClick: handleDblClick
+    rowHeight: 36
   };
 
   var _get_tags_from_card = function(card) {
@@ -118,7 +91,7 @@ angular.module('projectApp')
   };
 
   var get_tags_from_card = function(card) {
-    return _get_tags_from_card(card).remove(get_card_owner(card)['owner']);
+    return _get_tags_from_card(card).remove(get_card_owner(card)['userid']);
   };
 
   var get_card_owner = function(card) {
@@ -138,39 +111,46 @@ angular.module('projectApp')
     return { 'userid': owner, 'fullname': fullname };
   };
 
-  var get_tag_project_mapping = function() {
+  var get_projectgroup_mapping = function() {
     Trello.get('boards/vcuJKaxt/lists', function(lists) {
       Trello.get('boards/vcuJKaxt/cards', function(cards) {
         lists.forEach(function(list) {
-          if (!list.name.match(/!/)) {
-            cards.forEach(function(card) {
-              var tag_list = new MiniSet();
+          var tag_list = new MiniSet();
+          var list_name = '';
 
+          if (!list.name.match(/!/)) {
+            list_name = list.name;
+
+            cards.forEach(function(card) {
               if (!card.name.match(/!/)) {
                 if (card.idList == list.id) {
                   tag_list.add(card.name);
-//                  console.log(card.name);
                 }
               }
-
-              var values = { "projectgroup": list.name, "tags": tag_list };
-              $scope.project_group.push(values);
-              tag_list.clear();
-
-              // console.log($scope.project_group);
             });
           }
+
+          $scope.projectgroup_map[list_name] = tag_list;
         });
       });
     });
   };
 
+  // this will figure out the project group a set of tags belongs to
+  var get_projectgroup = function(tags) {
+    console.log($scope.projectgroup_map);
+
+    $scope.projectgroup_map.forEach(function(group) {
+      console.log("projectgroup: " + $scope.projectgroup_map[group]);
+    });
+  }
+
   $scope.get_data = function() {
+    get_projectgroup_mapping();
+
     Trello.get('members/me/', function(member) {
       $scope.full_name = member.fullName;
     });
-
-    get_tag_project_mapping();
 
     Trello.get('boards/'+boardId+'/lists', function(lists) {
       Trello.get('boards/'+boardId+'/cards?members=true', function(cards) {
@@ -180,11 +160,11 @@ angular.module('projectApp')
               if (!card.name.match(/!/)) {
                 if (card.idList === list.id) {
                   var $owner = get_card_owner(card);
-                  var $tagstoprojects = get_tag_project_mapping();
                   var $status = ''; // this is for mapping a trello label name to bootstrap label classes
 
                   $scope.num_cards_total += 1;
 
+                  // translate trello labels bootstrap labels
                   card.labels.forEach(function(v, i, a) {
                     switch(v.name.toLowerCase()) {
                       case 'ok':
@@ -204,8 +184,7 @@ angular.module('projectApp')
                     }
                   });
 
-//                  console.log(card);
-
+                  // prepare a data structure to transport all card's data (we care about) to the $scope
                   var values = {
                     id: card.id,
                     owner: $owner['userid'],
@@ -216,18 +195,22 @@ angular.module('projectApp')
                     tags: get_tags_from_card(card).keys(),
                     status: $status,
                     dateLastActivity: new Date(card.dateLastActivity),
-                    stringLastActivity: moment(new Date(card.dateLastActivity)).fromNow()
+//                    stringLastActivity: moment(new Date(card.dateLastActivity)).fromNow(),
+                    project_group: get_projectgroup(get_tags_from_card(card).keys())
                   };
 
+                  // if we see more than 0 comments, add the latest to the scope
                   if (card.badges.comments > 0) {
                     Trello.get('cards/'+card.id+'/actions?id=commentCard', function(comments) {
-                      // console.log(card.badges.comments + ': ' + comments);
                       values.lastComment = comments[0]['data']['text'];
+                      console.log(comments[0]['data']['text']);
                     });
                   }
 
+                  // push all the card's information to $scope
                   $scope.cards.push(values);
 
+                  // update chart data
                   $scope.syseng_cards_chart_config.data.columns = [["ok", $scope.num_cards_ok], ["issues", $scope.num_cards_issues], ["blocked", $scope.num_cards_blocked]];
 
                   // http://jimhoskins.com/2012/12/17/angularjs-and-apply.html

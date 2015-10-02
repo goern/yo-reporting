@@ -118,6 +118,7 @@
                   <td><a href="#" ng-click="sortType = 'status'; sortReverse = !sortReverse">∑</a></td>
                   <td>Card Title</td>
                   <td>Tags</td>
+                  <td>Project Group</td>
                 </tr>
               </thead>
               <tbody>
@@ -126,10 +127,11 @@
                   <td><span class="label label-{{ item.status }}">&nbsp;</span></td>
                   <td>
                     <a href="{{ item.url }}">{{ item.title }}</a><br/>
-                    <small>last activity: {{ item.stringLastActivity }}</small><br/>
-                    <small ng-show='item.lastComment'>last comment: {{ item.lastComment }}</small>
+                    <small>last activity: {{ item.dateLastActivity }}</small><br/>
+                    <small>last comment: {{ item.lastComment }}</small>
                   </td>
                   <td><span ng-repeat="tag in item.tags">{{ tag }} </span></td>
+                  <td>{{ item.project_group }}</td>
                 </tr>
               </tbody>
             </table>
