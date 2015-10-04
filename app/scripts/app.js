@@ -15,7 +15,8 @@ angular
   'ngTouch',
   'patternfly',
   'patternfly.charts',
-  'ui.bootstrap'
+  'ui.bootstrap',
+  'angularMoment'
 ])
 .config(function($httpProvider) {
   //Enable cross domain calls

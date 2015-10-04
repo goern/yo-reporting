@@ -47,6 +47,7 @@ module.exports = function(config) {
       'bower_components/patternfly/dist/js/patternfly.js',
       'bower_components/showdown/dist/showdown.js',
       'bower_components/ng-showdown/dist/ng-showdown.js',
+      'bower_components/angular-moment/angular-moment.js',
       'bower_components/angular-mocks/angular-mocks.js',
       // endbower
       "app/scripts/**/*.js",

@@ -194,16 +194,23 @@ angular.module('projectApp')
                     description: card.desc,
                     tags: get_tags_from_card(card).keys(),
                     status: $status,
-                    dateLastActivity: new Date(card.dateLastActivity),
-//                    stringLastActivity: moment(new Date(card.dateLastActivity)).fromNow(),
+                    lastActivity: new Date(card.dateLastActivity),
                     project_group: get_projectgroup(get_tags_from_card(card).keys())
                   };
 
                   // if we see more than 0 comments, add the latest to the scope
                   if (card.badges.comments > 0) {
                     Trello.get('cards/'+card.id+'/actions?id=commentCard', function(comments) {
-                      values.lastComment = comments[0]['data']['text'];
-                      console.log(comments[0]['data']['text']);
+                      var currentActivity = comments[0]['data']['text'];
+
+                      if (currentActivity !== undefined) {
+                        $scope.cards.forEach(function(_card) {
+                          if (_card['id'] === card.id) {
+                            _card.lastComment = currentActivity;
+                            $scope.$apply();
+                          }
+                        });
+                      } // endif
                     });
                   }
 

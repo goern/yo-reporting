@@ -91,7 +91,7 @@
             <div id="syseng_cards_chart" pf-c3-chart config="syseng_cards_chart_config"></div>
           </div>
           <div class="col-sm-4">
-            <div id="projectgroup_chart"></div>
+            <div id="projectgroup_chart" pf-c3-chart config="projectgroup_chart_config"></div>
           </div>
           <div class="col-sm-4">
             <div id="product_chart"></div>
@@ -113,8 +113,7 @@
             <table id="cardDataTable" class="table table-bordered table-striped">
               <thead>
                 <tr>
-                  <td><a href="#" ng-click="sortType = 'fullname'; sortReverse = !sortReverse">Owner <span ng-show="sortType == 'fullname' && !sortReverse" class="fa fa-caret-down"></span>
-        <span ng-show="sortType == 'fullname' && sortReverse" class="fa fa-caret-up"></span></a></td>
+                  <td><a href="#" ng-click="sortType = 'fullname'; sortReverse = !sortReverse">Owner <span ng-show="sortType == 'fullname' && !sortReverse" class="fa fa-caret-down"></span><span ng-show="sortType == 'fullname' && sortReverse" class="fa fa-caret-up"></span></a></td>
                   <td><a href="#" ng-click="sortType = 'status'; sortReverse = !sortReverse">∑</a></td>
                   <td>Card Title</td>
                   <td>Tags</td>
@@ -127,8 +126,8 @@
                   <td><span class="label label-{{ item.status }}">&nbsp;</span></td>
                   <td>
                     <a href="{{ item.url }}">{{ item.title }}</a><br/>
-                    <small>last activity: {{ item.dateLastActivity }}</small><br/>
-                    <small>last comment: {{ item.lastComment }}</small>
+                    <small>last activity: <span am-time-ago="item.lastActivity"></span></small><br/>
+                    <small ng-show='item.lastComment'>last comment: {{ item.lastComment }}</small>
                   </td>
                   <td><span ng-repeat="tag in item.tags">{{ tag }} </span></td>
                   <td>{{ item.project_group }}</td>
@@ -189,6 +188,7 @@
   <script src="bower_components/patternfly/dist/js/patternfly.js"></script>
   <script src="bower_components/showdown/dist/showdown.js"></script>
   <script src="bower_components/ng-showdown/dist/ng-showdown.js"></script>
+  <script src="bower_components/angular-moment/angular-moment.js"></script>
   <!-- endbower -->
   <!-- endbuild -->
 
