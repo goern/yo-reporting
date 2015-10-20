@@ -33,7 +33,7 @@ angular.module('projectApp')
       "width":25
      },
      "size": { "height": 130 },
-     "legend": { "show": true },
+     "legend": { "show": false },
      "color": {"pattern":["#3f9c35","#ec7a08", "#cc0000"]},
      "tooltip": {},
      "data": {
@@ -43,11 +43,23 @@ angular.module('projectApp')
      }
   };
 
-  $scope.syseng_cards_data = {
-    'ok': 12,
-    'issues': 3,
-    'blocked': 1
+  $scope.projectgroup_chart_config = {
+    "donut": {
+      "title":"Groups",
+      "label":{ "show": false },
+      "width":25
+     },
+     "size": { "height": 130 },
+     "legend": { "show": false },
+     "color": {"pattern":["#f5c12e","#f39d3c", "#35caed", "#39a5dc", "#ace12e", "#6eb664", "#3a9ca6", "#6d3ba4"]},
+     "tooltip": {},
+     "data": {
+       "columns": [["OpenShift", 0], ["RHS", 0], ["RHEL-OSP", 0], ["ISV", 0], ["AppInfra", 0]],
+       "type": "donut",
+       "groups": [["OpenShift", "RHS", "RHEL-OSP", "ISV", "AppInfra"]]
+     }
   };
+
 
   $scope.selectType = 'checkbox';
   $scope.updateSelectionType = function() {
@@ -134,20 +146,21 @@ angular.module('projectApp')
         });
       });
     });
+
+    console.log('done with populating projectgroup_map');
+    console.log($scope.projectgroup_map);
   };
 
   // this will figure out the project group a set of tags belongs to
   var get_projectgroup = function(tags) {
-    console.log($scope.projectgroup_map);
+    console.log('in get_projectgroup()');
 
-    $scope.projectgroup_map.forEach(function(group) {
-      console.log("projectgroup: " + $scope.projectgroup_map[group]);
+    $scope.projectgroup_map.forEach(function(currentValue, index, array) {
+      console.log(array);
     });
   }
 
   $scope.get_data = function() {
-    get_projectgroup_mapping();
-
     Trello.get('members/me/', function(member) {
       $scope.full_name = member.fullName;
     });
@@ -219,6 +232,7 @@ angular.module('projectApp')
 
                   // update chart data
                   $scope.syseng_cards_chart_config.data.columns = [["ok", $scope.num_cards_ok], ["issues", $scope.num_cards_issues], ["blocked", $scope.num_cards_blocked]];
+                  $scope.projectgroup_chart_config.data.columns = [["OpenShift", 1], ["RHS", 1], ["RHEL-OSP", 1], ["ISV", 1], ["AppInfra", 1]];
 
                   // http://jimhoskins.com/2012/12/17/angularjs-and-apply.html
                   $scope.$apply();
@@ -233,6 +247,7 @@ angular.module('projectApp')
 
   var onAuthorized = function() {
     $scope.authorized = true;
+    get_projectgroup_mapping();
     $scope.get_data();
   };
 
@@ -260,6 +275,8 @@ angular.module('projectApp')
     $scope.num_cards_blocked = 0;
     $scope.num_cards_total = 0;
     $scope.syseng_cards_chart_config.data.columns = [["ok", $scope.num_cards_ok], ["issues", $scope.num_cards_issues], ["blocked", $scope.num_cards_blocked]];
+    $scope.projectgroup_chart_config.data.columns = [["OpenShift", 0], ["RHS", 0], ["RHEL-OSP", 0], ["ISV", 0], ["AppInfra", 0]];
+
   };
 
 });
